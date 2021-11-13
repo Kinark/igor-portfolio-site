@@ -51,6 +51,7 @@ const initialSelected = (pathname) => (rightIndex(pathname) !== -1 ? rightIndex(
 
 export default function Navigation() {
   const controls = useRef(floatingItems.map(useAnimation));
+  const floatingShadowElsRefs = useRef(floatingItems.map(() => createRef()));
   const floatingElsRefs = useRef(floatingItems.map(() => createRef()));
   const floatingElsPositions = useRef(floatingItems.map(() => null));
   const currentTimer = useRef(null);
@@ -95,9 +96,11 @@ export default function Navigation() {
   };
 
   const activateSelectedAnimation = () => {
-    controls.current[selected].start({
-      y: -floatingElsPositions.current[selected].y + 20,
-      x: -floatingElsPositions.current[selected].x + 20,
+    if (!selectedRef.current) return;
+    const selectedShadowEl = floatingShadowElsRefs.current[selectedRef.current].current.getBoundingClientRect();
+    controls.current[selectedRef.current].start({
+      y: -selectedShadowEl.y + 20,
+      x: -selectedShadowEl.x + 20,
       transition: {
         delay: 0,
         duration: DEFAULT_TRANSITION_DURATION / 1000,
@@ -110,22 +113,26 @@ export default function Navigation() {
     controls.current[prevSelectedRef.current].start(restartAnimation);
   };
 
+  const keepOrderInTheUniverse = () => {
+    if (prevSelectedRef.current !== undefined && selected === null) activateBreathingAnimation();
+    if (selected === null || !floatingShadowElsRefs.current[selected]) return;
+    activateSelectedAnimation();
+  };
+
   useEffect(() => {
     controls.current.forEach((el, i) => {
       floatingElsPositions.current[i] = floatingElsRefs.current[i].current.getBoundingClientRect();
       if (i !== selected) el.start(startAnimation);
     });
+    window.addEventListener('resize', activateSelectedAnimation);
     document.addEventListener(PAGE_CLOSE_ANIMATION_DONE, closeLink);
     return () => {
+      window.removeEventListener('resize', activateSelectedAnimation);
       document.removeEventListener(PAGE_CLOSE_ANIMATION_DONE, closeLink);
     };
   }, []);
 
-  useEffect(() => {
-    if (prevSelectedRef.current !== undefined && selected === null) activateBreathingAnimation();
-    if (selected === null || !floatingElsPositions.current[selected]) return;
-    activateSelectedAnimation();
-  }, [selected, floatingElsPositions, prevSelectedRef]);
+  useEffect(keepOrderInTheUniverse, [selected, floatingElsPositions, prevSelectedRef]);
 
   useEffect(() => {
     currentPathname.current = router.pathname;
@@ -137,20 +144,29 @@ export default function Navigation() {
 
   return (
     <Wrapper>
-      {floatingItems.map(({ label, delay, speed, href, ...rest }, i) => (
-        <Floating
-          {...rest}
-          href={selected === i ? '/' : href}
-          ref={floatingElsRefs.current[i]}
-          onClick={onLinkClick(i)}
+      {floatingItems.map(({ label, delay, speed, href, top, left, bottom, right, ...rest }, i) => (
+        <FloatingWrapper
+          ref={floatingShadowElsRefs.current[i]}
           key={i}
-          custom={{ delay, i, speed }}
-          animate={controls.current[i]}
+          top={top}
+          left={left}
+          bottom={bottom}
+          right={right}
           selected={selected === i}
-          inTheBg={selected !== null && selected !== i}
         >
-          {label}
-        </Floating>
+          <Floating
+            {...rest}
+            href={selected === i ? '/' : href}
+            ref={floatingElsRefs.current[i]}
+            onClick={onLinkClick(i)}
+            custom={{ delay, i, speed }}
+            animate={controls.current[i]}
+            selected={selected === i}
+            inTheBg={selected !== null && selected !== i}
+          >
+            {label}
+          </Floating>
+        </FloatingWrapper>
       ))}
       <TextWrapper inTheBg={selected !== null}>
         <div>
@@ -164,18 +180,18 @@ export default function Navigation() {
 }
 
 const Wrapper = styled.nav`
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
   width: 95%;
   margin: auto;
   max-width: 1150px;
-  height: 100%;
   z-index: 2;
 `;
 const TextWrapper = styled.div`
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
   height: 100%;
   max-width: 600px;
   width: 95%;
@@ -219,7 +235,6 @@ const float = keyframes`
 const Floating = styled(motion.a)`
   border: none;
   cursor: pointer;
-  position: fixed;
   background-color: #f6f6f6;
   border-radius: 18px;
   font-weight: 700;
@@ -249,6 +264,11 @@ const Floating = styled(motion.a)`
     width: ${({ selected }) => (selected ? '24px' : '0')};
     transition: width ${DEFAULT_TRANSITION_DURATION}ms;
   }
+`;
+
+const FloatingWrapper = styled.div`
+  position: fixed;
+  z-index: ${({ selected }) => (selected ? 999 : 0)};
   ${({ top }) =>
     top &&
     css`
