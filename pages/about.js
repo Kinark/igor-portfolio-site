@@ -59,10 +59,10 @@ const About = () => {
         <Col xs={12} sm={6} md={7}>
           <TitlePurple>What happened</TitlePurple>
           <Text>
-            I've been working with computers throughout all my life. I love technology and I have a deep passion for
+            I&apos;ve been working with computers throughout all my life. I love technology and I have a deep passion for
             logic and solving problems. Creating solutions that make the world more beautiful and more functional is
             what makes me keep moving. I keep some open source projects on GitHub and contributed to some other ones.
-            I've been creating, designing and developing projects for so many years that it became my way of thinking. I
+            I&apos;ve been creating, designing and developing projects for so many years that it became my way of thinking. I
             always want to find better solutions to what we have.
           </Text>
         </Col>
@@ -77,7 +77,7 @@ const About = () => {
             <Image src={oeste} layout="responsive" alt="Oeste picture" />
             <OestePicLabelWrapper>
               <TitlePurple color="white">This is Oeste, our young cat.</TitlePurple>
-              <Text color="white">I thought it'd be exciting to see a cat pic in the middle of the text.</Text>
+              <Text color="white">I thought it&apos;d be exciting to see a cat pic in the middle of the text.</Text>
             </OestePicLabelWrapper>
           </PicWrapper>
         </Col>
@@ -86,7 +86,7 @@ const About = () => {
         <Col xs={8}>
           <TitlePurple>Nevertheless</TitlePurple>
           <Text>
-            Other than that, I’m a crypto enthusiast, a writer for hobby and I love video games. Oh, I’ve been a game
+            Other than that, I&apos;m a crypto enthusiast, a writer for hobby and I love video games. Oh, I’ve been a game
             designer back in time! I also deeply love UI/UX, so one of the things I most enjoy in building apps (web or
             mobile) is to make cool micro interactions and making the user experience the most awesome thing ever.
           </Text>
