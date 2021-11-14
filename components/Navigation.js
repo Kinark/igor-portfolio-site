@@ -96,7 +96,7 @@ export default function Navigation() {
   };
 
   const activateSelectedAnimation = () => {
-    if (!selectedRef.current) return;
+    if (selectedRef.current === null) return;
     const selectedShadowEl = floatingShadowElsRefs.current[selectedRef.current].current.getBoundingClientRect();
     controls.current[selectedRef.current].start({
       y: -selectedShadowEl.y + 20,
@@ -187,6 +187,7 @@ const Wrapper = styled.nav`
 `;
 const TextWrapper = styled.div`
   position: fixed;
+  z-index: -1;
   left: 0;
   right: 0;
   top: 0;

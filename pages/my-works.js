@@ -4,7 +4,7 @@ import Head from 'next/head';
 import PageLayout from '../components/PageLayout';
 import useIsPageClosing from '../hooks/useIsPageClosing';
 
-const MyWorks = () => {
+export default function MyWorks() {
   const isPageClosing = useIsPageClosing();
   return (
     <>
@@ -16,8 +16,6 @@ const MyWorks = () => {
       </Head>
     </>
   );
-};
+}
 
 MyWorks.getLayout = (page) => <PageLayout>{page}</PageLayout>;
-
-export default MyWorks;
