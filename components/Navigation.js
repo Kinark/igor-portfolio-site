@@ -11,12 +11,12 @@ import { DEFAULT_TRANSITION_DURATION } from '../constants/variables';
 import styles from '../styles/Home.module.css';
 
 const floatingItems = [
-  { label: 'My works', href: '/my-works', delay: Math.random(), speed: Math.random(), top: '10', left: '5' },
+  { label: 'My works', href: '/my-works', delay: Math.random(), speed: Math.random(), top: '10', left: '20' },
   { label: '🎊', href: '', delay: Math.random(), speed: Math.random(), top: '8', right: '34' },
-  { label: '🎉', href: '', delay: Math.random(), speed: Math.random(), top: '20', left: '33' },
-  { label: 'Get in touch', href: '/contact', delay: Math.random(), speed: Math.random(), bottom: '25', left: '10' },
-  { label: '🚀', href: '', delay: Math.random(), speed: Math.random(), bottom: '25', right: '22' },
-  { label: 'About', href: '/about', delay: Math.random(), speed: Math.random(), top: '22', right: '22' },
+  { label: '🎉', href: '', delay: Math.random(), speed: Math.random(), bottom: '35', left: '50' },
+  { label: 'Get in touch', href: '/contact', delay: Math.random(), speed: Math.random(), bottom: '20', left: '22' },
+  { label: '🚀', href: '', delay: Math.random(), speed: Math.random(), bottom: '28', right: '28' },
+  { label: 'About', href: '/about', delay: Math.random(), speed: Math.random(), top: '20', right: '50' },
 ];
 
 const rightIndex = (route) => floatingItems.findIndex((el) => el.href === route);
@@ -179,6 +179,14 @@ export default function Navigation() {
   );
 }
 
+const isInTheBgStyle = css`
+  transition: background-color 300ms, top ${DEFAULT_TRANSITION_DURATION}ms, left ${DEFAULT_TRANSITION_DURATION}ms,
+    filter ${DEFAULT_TRANSITION_DURATION}ms, opacity ${DEFAULT_TRANSITION_DURATION}ms;
+  filter: ${({ inTheBg }) => inTheBg && 'blur(16px) saturate(3)'};
+  opacity: ${({ inTheBg }) => (inTheBg ? '0.85' : '1')};
+  pointer-events: ${({ inTheBg }) => (inTheBg ? 'none' : 'auto')};
+`;
+
 const Wrapper = styled.nav`
   width: 95%;
   margin: auto;
@@ -202,10 +210,7 @@ const TextWrapper = styled.div`
   text-align: center;
   font-size: 40px;
   margin: auto;
-  transition: top ${DEFAULT_TRANSITION_DURATION}ms, left ${DEFAULT_TRANSITION_DURATION}ms,
-    filter ${DEFAULT_TRANSITION_DURATION}ms;
-  filter: ${({ inTheBg }) => inTheBg && 'blur(20px)'};
-  pointer-events: ${({ inTheBg }) => (inTheBg ? 'none' : 'auto')};
+  ${isInTheBgStyle};
   @media (max-width: 960px) {
     font-size: 32px;
   }
@@ -247,10 +252,7 @@ const Floating = styled(motion.a)`
     font-size: 16px;
   }
   padding: 8px 16px;
-  transition: background-color 300ms, top ${DEFAULT_TRANSITION_DURATION}ms, left ${DEFAULT_TRANSITION_DURATION}ms,
-    filter ${DEFAULT_TRANSITION_DURATION}ms;
-  filter: ${({ inTheBg }) => inTheBg && 'blur(20px)'};
-  pointer-events: ${({ inTheBg }) => (inTheBg ? 'none' : 'auto')};
+  ${isInTheBgStyle};
   &:hover {
     background-color: #f4f4f4;
   }
@@ -290,4 +292,26 @@ const FloatingWrapper = styled.div`
     css`
       top: ${100 - bottom}%;
     `};
+  @media (max-width: 960px) {
+    ${({ top }) =>
+      top &&
+      css`
+        top: ${top}%;
+      `};
+    ${({ left }) =>
+      left &&
+      css`
+        left: ${left / 2}%;
+      `};
+    ${({ right }) =>
+      right &&
+      css`
+        left: ${100 - right}%;
+      `};
+    ${({ bottom }) =>
+      bottom &&
+      css`
+        top: ${100 - bottom}%;
+      `};
+  }
 `;

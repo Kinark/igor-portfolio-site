@@ -35,10 +35,9 @@ export default function PageLayout({ children }) {
 }
 
 const Wrapper = styled.main`
-  width: 95%;
+  width: 100%;
   max-width: 1150px;
   margin: 120px auto 0;
-  padding: 0 20px;
   position: relative;
   z-index: 3;
 `;
