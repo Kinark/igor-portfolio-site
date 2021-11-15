@@ -40,5 +40,4 @@ const Wrapper = styled.main`
   margin: 80px auto 0;
   position: relative;
   z-index: 3;
-  min-height: calc(100vh - 80px);
 `;
