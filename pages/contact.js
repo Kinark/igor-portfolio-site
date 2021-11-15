@@ -54,7 +54,7 @@ export default function Contact() {
         <meta property="og:image" content="/assets/ogimage.png" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <LottieWrapper active={!isStopped}>
+      <LottieWrapper column active={!isStopped}>
         <Lottie options={defaultLottieOptions} height={300} width={300} isStopped={isStopped} isPaused={false} />
         <TitleSmall>Thanks! I&apos;ll get in touch ASAP!</TitleSmall>
         <Button onClick={closeOverlay}>Close</Button>

@@ -9,7 +9,7 @@ const LottieWrapper = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
-  flex-direction: column;
+  flex-direction: ${({ column }) => column && 'column'};
   gap: 16px;
   justify-content: center;
   align-items: center;
@@ -22,6 +22,7 @@ const LottieWrapper = styled.div`
   & > * {
     opacity: ${({ active }) => (active ? '1' : '0')};
     transition: opacity ${DEFAULT_TRANSITION_DURATION}ms;
+    width: 100%;
   }
 `;
 
