@@ -16,14 +16,11 @@ const options = {
         <p>{children}</p>
       </Card>
     ),
-    [BLOCKS.EMBEDDED_ASSET]: (node, children) => {
-      console.log(node);
-      return (
-        <FullWidthImageWrapper>
-          <FullWidthImage layout="fill" alt="" src={`https:${node.data.target.fields.file.url}`} />
-        </FullWidthImageWrapper>
-      );
-    },
+    [BLOCKS.EMBEDDED_ASSET]: (node, children) => (
+      <FullWidthImageWrapper>
+        <FullWidthImage layout="fill" alt="" src={`https:${node.data.target.fields.file.url}`} />
+      </FullWidthImageWrapper>
+    ),
   },
 };
 
