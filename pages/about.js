@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import styled, { css, keyframes } from 'styled-components';
 import Head from 'next/head';
 import Image from 'next/image';
-import { Grid, Col, Row } from 'react-styled-flexboxgrid';
+import { Col, Row } from 'react-styled-flexboxgrid';
 
 import igorPic from '../assets/me.jpg';
 import cardAge from '../assets/CardAge.svg';

@@ -22,25 +22,6 @@ const defaultLottieOptions = {
   },
 };
 
-const floatingItems = [
-  { label: 'My works', href: '/my-works', delay: Math.random(), speed: Math.random(), top: '10', left: '20' },
-  { label: '🎊', href: '', delay: Math.random(), speed: Math.random(), top: '8', right: '34', lottie: confettiLottie },
-  { label: '🎉', href: '', delay: Math.random(), speed: Math.random(), bottom: '35', left: '50', lottie: partyLottie },
-  { label: 'Get in touch', href: '/contact', delay: Math.random(), speed: Math.random(), bottom: '20', left: '22' },
-  {
-    label: '🚀',
-    href: '',
-    delay: Math.random(),
-    speed: Math.random(),
-    bottom: '28',
-    right: '28',
-    lottie: rocketLottie,
-  },
-  { label: 'About', href: '/about', delay: Math.random(), speed: Math.random(), top: '20', right: '50' },
-];
-
-const rightIndex = (route) => floatingItems.findIndex((el) => el.href === route);
-
 const resetAnimation = () => ({
   x: 0,
   y: 0,
@@ -67,9 +48,28 @@ const restartAnimation = ({ speed }) => ({
   },
 });
 
+const floatingItems = [
+  { label: 'My works', href: '/my-works', delay: Math.random(), speed: Math.random(), top: '10', left: '20' },
+  { label: '🎊', href: '/#', delay: Math.random(), speed: Math.random(), top: '8', right: '34', lottie: confettiLottie },
+  { label: '🎉', href: '/#', delay: Math.random(), speed: Math.random(), bottom: '35', left: '50', lottie: partyLottie },
+  { label: 'Get in touch', href: '/contact', delay: Math.random(), speed: Math.random(), bottom: '20', left: '22' },
+  {
+    label: '🚀',
+    href: '/#',
+    delay: Math.random(),
+    speed: Math.random(),
+    bottom: '28',
+    right: '28',
+    lottie: rocketLottie,
+  },
+  { label: 'About', href: '/about', delay: Math.random(), speed: Math.random(), top: '20', right: '50' },
+];
+
+const rightIndex = (route) => floatingItems.findIndex((el) => route.startsWith(el.href));
+// const isSubPage = (route) => floatingItems.findIndex((el) => el.href.replace('/', '').startsWith(route) && el.href !== route);
 const initialSelected = (pathname) => (rightIndex(pathname) !== -1 ? rightIndex(pathname) : null);
 
-export default function Navigation() {
+export default function Navigation({ goBackInstead }) {
   const router = useRouter();
   const [selected, _setSelected] = useState(initialSelected(router.pathname));
   const [isStopped, setIsStopped] = useState(true);
@@ -121,6 +121,8 @@ export default function Navigation() {
 
   const onLinkClick = (i) => async (e) => {
     if (e) e.preventDefault();
+
+    if (goBackInstead) return router.back();
 
     if (currentTimer.current) return;
     if (selected !== null) return document.dispatchEvent(new Event(WAITING_FOR_PAGE_CLOSE_ANIMATION));
@@ -248,7 +250,8 @@ const LottieWrapper = styled.div`
   pointer-events: ${({ active }) => (active ? 'auto' : 'none')};
   background-color: ${({ active }) => (active ? 'rgba(255, 255, 255, 0.5)' : 'transparent')};
   backdrop-filter: ${({ active }) => active && 'blur(16px) saturate(3)'};
-  transition: background-color ${DEFAULT_TRANSITION_DURATION}ms ease-out, backdrop-filter ${DEFAULT_TRANSITION_DURATION}ms ease-out;
+  transition: background-color ${DEFAULT_TRANSITION_DURATION}ms ease-out,
+    backdrop-filter ${DEFAULT_TRANSITION_DURATION}ms ease-out;
   & > div {
     opacity: ${({ active }) => (active ? '1' : '0')};
     transition: opacity ${DEFAULT_TRANSITION_DURATION}ms;

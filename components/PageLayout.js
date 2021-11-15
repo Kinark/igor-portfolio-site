@@ -25,10 +25,10 @@ const theme = {
   },
 };
 
-export default function PageLayout({ children }) {
+export default function PageLayout({ goBackInstead, children }) {
   return (
     <ThemeProvider theme={theme}>
-      <Navigation />
+      <Navigation goBackInstead={goBackInstead} />
       <Wrapper>{children}</Wrapper>
     </ThemeProvider>
   );
