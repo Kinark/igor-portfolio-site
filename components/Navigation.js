@@ -5,17 +5,37 @@ import Head from 'next/head';
 import Image from 'next/image';
 import styled, { css, keyframes } from 'styled-components';
 import { motion, useAnimation } from 'framer-motion';
+import Lottie from 'react-lottie';
 
+import rocketLottie from '../assets/lottie/45722-rocket-loader.json';
+import partyLottie from '../assets/lottie/61417-animated-emojis-party-emoji.json';
+import confettiLottie from '../assets/lottie/62717-confetti.json';
 import { WAITING_FOR_PAGE_CLOSE_ANIMATION, PAGE_CLOSE_ANIMATION_DONE } from '../constants/events';
 import { DEFAULT_TRANSITION_DURATION } from '../constants/variables';
 import styles from '../styles/Home.module.css';
 
+const defaultLottieOptions = {
+  loop: false,
+  autoplay: false,
+  rendererSettings: {
+    preserveAspectRatio: 'xMidYMid slice',
+  },
+};
+
 const floatingItems = [
   { label: 'My works', href: '/my-works', delay: Math.random(), speed: Math.random(), top: '10', left: '20' },
-  { label: '🎊', href: '', delay: Math.random(), speed: Math.random(), top: '8', right: '34' },
-  { label: '🎉', href: '', delay: Math.random(), speed: Math.random(), bottom: '35', left: '50' },
+  { label: '🎊', href: '', delay: Math.random(), speed: Math.random(), top: '8', right: '34', lottie: confettiLottie },
+  { label: '🎉', href: '', delay: Math.random(), speed: Math.random(), bottom: '35', left: '50', lottie: partyLottie },
   { label: 'Get in touch', href: '/contact', delay: Math.random(), speed: Math.random(), bottom: '20', left: '22' },
-  { label: '🚀', href: '', delay: Math.random(), speed: Math.random(), bottom: '28', right: '28' },
+  {
+    label: '🚀',
+    href: '',
+    delay: Math.random(),
+    speed: Math.random(),
+    bottom: '28',
+    right: '28',
+    lottie: rocketLottie,
+  },
   { label: 'About', href: '/about', delay: Math.random(), speed: Math.random(), top: '20', right: '50' },
 ];
 
@@ -50,16 +70,29 @@ const restartAnimation = ({ speed }) => ({
 const initialSelected = (pathname) => (rightIndex(pathname) !== -1 ? rightIndex(pathname) : null);
 
 export default function Navigation() {
+  const router = useRouter();
+  const [selected, _setSelected] = useState(initialSelected(router.pathname));
+  const [isStopped, setIsStopped] = useState(true);
+  const [isPaused, setIsPaused] = useState(false);
+  const [currentLottie, setCurrentLottie] = useState(rocketLottie);
   const controls = useRef(floatingItems.map(useAnimation));
   const floatingShadowElsRefs = useRef(floatingItems.map(() => createRef()));
   const floatingElsRefs = useRef(floatingItems.map(() => createRef()));
   const floatingElsPositions = useRef(floatingItems.map(() => null));
   const currentTimer = useRef(null);
-  const router = useRouter();
-  const [selected, _setSelected] = useState(initialSelected(router.pathname));
   const selectedRef = useRef(selected);
   const prevSelectedRef = useRef(undefined);
   const currentPathname = useRef(router.pathname);
+
+  const playLottie = (lottie) => (e) => {
+    e.preventDefault();
+    setCurrentLottie(lottie);
+    setIsStopped(false);
+  };
+
+  const stopLottie = () => {
+    setIsStopped(true);
+  };
 
   const setSelected = (data) => {
     _setSelected((prevSelected) => {
@@ -144,7 +177,22 @@ export default function Navigation() {
 
   return (
     <Wrapper>
-      {floatingItems.map(({ label, delay, speed, href, top, left, bottom, right, ...rest }, i) => (
+      <LottieWrapper active={!isStopped}>
+        <Lottie
+          options={{ ...defaultLottieOptions, animationData: currentLottie }}
+          height={600}
+          width={600}
+          isStopped={isStopped}
+          isPaused={isPaused}
+          eventListeners={[
+            {
+              eventName: 'complete',
+              callback: stopLottie,
+            },
+          ]}
+        />
+      </LottieWrapper>
+      {floatingItems.map(({ label, delay, speed, href, top, left, bottom, right, lottie, ...rest }, i) => (
         <FloatingWrapper
           ref={floatingShadowElsRefs.current[i]}
           key={i}
@@ -158,7 +206,7 @@ export default function Navigation() {
             {...rest}
             href={selected === i ? '/' : href}
             ref={floatingElsRefs.current[i]}
-            onClick={onLinkClick(i)}
+            onClick={lottie ? playLottie(lottie) : onLinkClick(i)}
             custom={{ delay, i, speed }}
             animate={controls.current[i]}
             selected={selected === i}
@@ -185,6 +233,26 @@ const isInTheBgStyle = css`
   filter: ${({ inTheBg }) => inTheBg && 'blur(16px) saturate(3)'};
   opacity: ${({ inTheBg }) => (inTheBg ? '0.85' : '1')};
   pointer-events: ${({ inTheBg }) => (inTheBg ? 'none' : 'auto')};
+`;
+
+const LottieWrapper = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  pointer-events: ${({ active }) => (active ? 'auto' : 'none')};
+  background-color: ${({ active }) => (active ? 'rgba(255, 255, 255, 0.5)' : 'transparent')};
+  backdrop-filter: ${({ active }) => active && 'blur(16px) saturate(3)'};
+  transition: background-color ${DEFAULT_TRANSITION_DURATION}ms ease-out, backdrop-filter ${DEFAULT_TRANSITION_DURATION}ms ease-out;
+  & > div {
+    opacity: ${({ active }) => (active ? '1' : '0')};
+    transition: opacity ${DEFAULT_TRANSITION_DURATION}ms;
+  }
 `;
 
 const Wrapper = styled.nav`

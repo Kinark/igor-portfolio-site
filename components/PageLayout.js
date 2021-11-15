@@ -37,7 +37,7 @@ export default function PageLayout({ children }) {
 const Wrapper = styled.main`
   width: 100%;
   max-width: 1150px;
-  margin: 120px auto 0;
+  margin: 80px auto 0;
   position: relative;
   z-index: 3;
 `;
