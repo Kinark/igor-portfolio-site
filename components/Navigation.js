@@ -13,6 +13,7 @@ import confettiLottie from '../assets/lottie/62717-confetti.json';
 import { WAITING_FOR_PAGE_CLOSE_ANIMATION, PAGE_CLOSE_ANIMATION_DONE } from '../constants/events';
 import { DEFAULT_TRANSITION_DURATION } from '../constants/variables';
 import styles from '../styles/Home.module.css';
+import LottieWrapper from '../components/LottieWrapper'
 
 const defaultLottieOptions = {
   loop: false,
@@ -235,27 +236,6 @@ const isInTheBgStyle = css`
   filter: ${({ inTheBg }) => inTheBg && 'blur(16px) saturate(3)'};
   opacity: ${({ inTheBg }) => (inTheBg ? '0.85' : '1')};
   pointer-events: ${({ inTheBg }) => (inTheBg ? 'none' : 'auto')};
-`;
-
-const LottieWrapper = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-  pointer-events: ${({ active }) => (active ? 'auto' : 'none')};
-  background-color: ${({ active }) => (active ? 'rgba(255, 255, 255, 0.5)' : 'transparent')};
-  backdrop-filter: ${({ active }) => active && 'blur(16px) saturate(3)'};
-  transition: background-color ${DEFAULT_TRANSITION_DURATION}ms ease-out,
-    backdrop-filter ${DEFAULT_TRANSITION_DURATION}ms ease-out;
-  & > div {
-    opacity: ${({ active }) => (active ? '1' : '0')};
-    transition: opacity ${DEFAULT_TRANSITION_DURATION}ms;
-  }
 `;
 
 const Wrapper = styled.nav`
