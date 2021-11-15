@@ -16,6 +16,7 @@ const FadeAwaySection = styled.div`
   opacity: ${({ goAway }) => (!goAway ? 1 : 0)};
   animation: ${fadeIn} ${DEFAULT_TRANSITION_DURATION}ms ease-out;
   margin: 32px 0;
+  min-height: 100%;
   ${({ align }) =>
     align &&
     css`
