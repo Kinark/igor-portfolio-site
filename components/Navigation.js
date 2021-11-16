@@ -13,7 +13,7 @@ import confettiLottie from '../assets/lottie/62717-confetti.json';
 import { WAITING_FOR_PAGE_CLOSE_ANIMATION, PAGE_CLOSE_ANIMATION_DONE } from '../constants/events';
 import { DEFAULT_TRANSITION_DURATION } from '../constants/variables';
 import styles from '../styles/Home.module.css';
-import LottieWrapper from '../components/LottieWrapper'
+import LottieWrapper from '../components/LottieWrapper';
 
 const defaultLottieOptions = {
   loop: false,
@@ -51,8 +51,24 @@ const restartAnimation = ({ speed }) => ({
 
 const floatingItems = [
   { label: 'My works', href: '/my-works', delay: Math.random(), speed: Math.random(), top: '10', left: '20' },
-  { label: '🎊', href: '/#', delay: Math.random(), speed: Math.random(), top: '8', right: '34', lottie: confettiLottie },
-  { label: '🎉', href: '/#', delay: Math.random(), speed: Math.random(), bottom: '35', left: '50', lottie: partyLottie },
+  {
+    label: '🎊',
+    href: '/#',
+    delay: Math.random(),
+    speed: Math.random(),
+    top: '8',
+    right: '34',
+    lottie: confettiLottie,
+  },
+  {
+    label: '🎉',
+    href: '/#',
+    delay: Math.random(),
+    speed: Math.random(),
+    bottom: '35',
+    left: '50',
+    lottie: partyLottie,
+  },
   { label: 'Get in touch', href: '/contact', delay: Math.random(), speed: Math.random(), bottom: '20', left: '22' },
   {
     label: '🚀',
@@ -157,6 +173,7 @@ export default function Navigation({ goBackInstead }) {
 
   useEffect(() => {
     controls.current.forEach((el, i) => {
+      if (floatingItems[i].href !== '/#') router.prefetch(floatingItems[i].href);
       floatingElsPositions.current[i] = floatingElsRefs.current[i].current.getBoundingClientRect();
       if (i !== selected) el.start(startAnimation);
     });

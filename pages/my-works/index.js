@@ -24,7 +24,7 @@ export default function MyWorks({ stories }) {
             (story) =>
               story.fields.logo && (
                 <div key={story.sys.id}>
-                  <Link href={`/my-works/${story.sys.id}`} passHref>
+                  <Link href={`/my-works/${story.sys.id}`} prefetch={false} passHref>
                     <a>
                       <LogoWrapper>
                         <FullWidthImageWrapper>
